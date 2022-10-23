@@ -1,13 +1,110 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.bird-app button {
+  border: 0px solid #eee;
+  font-size: 12pt;
+  background-color: rgb(29, 134, 254);
+  color: white;
+  border-radius: 3px;
+  padding: 10px;
+  margin: 2px 0;
+  cursor: pointer;
 }
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.bird-app button:disabled {
+  color: #eee;
+  background-color: #ccc;
+  cursor: default;
 }
+.bird-app select {
+  padding: 10px;
+  margin: 2px 0;
+  font-size: 12pt;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+}
+.bird-app select:focus {
+  border-color: skyblue;
+}
+.bird-app input[type=text] {
+  width: 380px;
+}
+.bird-app input[type=number] {
+  width: 70px;
+}
+.bird-app input[type=text], .bird-app input[type=number] {
+  padding: 10px;
+  margin: 2px 0;
+  font-size: 12pt;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+}
+.bird-app input[type=text]:focus, .bird-app input[type=number]:focus {
+  border-color: skyblue;
+}
+.bird-app .bird-search-bar {
+  z-index: 1;
+  position: relative;
+}
+.bird-app .bird-search-bar fieldset {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-wrap: wrap;
+  border: none;
+  padding: 2px 0px;
+}
+.bird-app .bird-search-bar fieldset .bird-species-search-tool {
+  display: flex;
+  flex-direction: column;
+  width: 402px;
+}
+.bird-app .bird-search-bar fieldset .bird-species-search-tool input {
+  margin: 2px 0px 0px;
+}
+.bird-app .bird-search-bar fieldset .bird-species-search-tool input.open {
+  border-radius: 4px 4px 0 0;
+}
+.bird-app .bird-search-bar fieldset .bird-species-search-tool input.open:focus {
+  border-color: skyblue skyblue #eee skyblue;
+}
+.bird-app .bird-search-bar fieldset .bird-species-search-tool input.open:focus + .drop-down-menu .drop-down-scroll-container {
+  border-color: skyblue;
+}
+.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu {
+  height: 0px;
+}
+.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container {
+  max-height: 300px;
+  overflow-y: auto;
+  border-color: #eee;
+  border-style: solid;
+  border-width: 0px 1px 1px 1px;
+  border-radius: 0px 0px 4px 4px;
+}
+.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container div {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+}
+.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container div .species-option {
+  background-color: white;
+  min-height: 40px;
+  color: inherit;
+  border: none;
+  border-top: 1px solid #eee;
+  padding: 10px;
+  margin: 0px;
+  border-radius: 0px;
+  min-width: 220px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12pt;
+  cursor: pointer;
+  outline: inherit;
+  text-align: left;
+}
+.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container div .species-option:first-child {
+  border-top: none;
+}
+.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container div .species-option:hover {
+  background-color: #eee;
+}/*# sourceMappingURL=index.css.map */
