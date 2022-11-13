@@ -12,7 +12,7 @@ const BirdSpeciesListComponent = (props) => {
     // if taxonomy is present, get the local species list based on areaCode
     // use taxonomy to get human readable information from speciesCodes list
     useEffect( () => {
-      if(props.taxonomyLoaded && typeof props.taxonomyError !== Error)
+      if(props.taxonomyLoaded && typeof props.taxonomyError !== Error && props.areaCode !== null)
       {
         setSpeciesList([]);
         getRegionSpeciesList(props.areaCode).catch((error) => {
