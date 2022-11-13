@@ -88,6 +88,7 @@ const BirdSearchBar = (props) => {
         if(searchByGeoType === "area") {
           attributes.areaCode = localAreaCode;
         } else if (searchByGeoType === "coordinates") {
+          attributes.areaCode = localAreaCode;
           attributes.lattitude = Math.round(localLattitude * 100) / 100;
           attributes.longitude = Math.round(localLongitude * 100) / 100;
         }
