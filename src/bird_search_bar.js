@@ -153,7 +153,7 @@ const BirdSearchBar = (props) => {
     }
   
     return (
-      <form className="bird-search-bar" onSubmit={formSubmit}>
+      <form className="bird_search_bar" onSubmit={formSubmit}>
         <fieldset>
           <select value={searchByGeoType} onChange={(event) => setSearchByGeoType(event.target.value)}>
             <option value="coordinates">Coordinates</option>
