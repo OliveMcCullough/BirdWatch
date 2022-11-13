@@ -1,25 +1,57 @@
+body {
+  background-image: url("./images/background.png"), linear-gradient(-90deg, #b5f7ff 0%, #5ba7cb 100%);
+  background-size: 100%;
+  padding: 0px;
+  margin: 0px;
+}
+
+@font-face {
+  font-family: "Cardenio Modern";
+  src: url("./fonts/CardenioModern-Regular.woff2") format("woff2"), url("./fonts/CardenioModern-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 .bird-app button {
   border: 0px solid #eee;
-  font-size: 12pt;
-  background-color: rgb(29, 134, 254);
-  color: white;
+  font-size: 16pt;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0);
+  background-image: url("./images/buttonBackground.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  color: black;
   border-radius: 3px;
   padding: 10px;
-  margin: 2px 0;
+  margin: 8px 20px 9px 0;
   cursor: pointer;
+  font-family: "Cardenio Modern";
+  min-width: 160px;
+  position: relative;
+}
+.bird-app button:hover {
+  box-shadow: inset 0 0 0 1000px rgba(192, 174, 14, 0.2);
 }
 .bird-app button:disabled {
-  color: #eee;
-  background-color: #ccc;
+  color: #aaa;
+  box-shadow: inset 0 0 0 1000px rgba(112, 112, 112, 0.2);
   cursor: default;
 }
 .bird-app select {
+  text-align: center;
+  min-width: 160px;
+  font-family: "Cardenio Modern";
+  height: 50px;
   padding: 10px;
-  margin: 2px 0;
-  font-size: 12pt;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  margin: 8px 20px 8px 0;
+  font-size: 16pt;
+  border: none;
   outline: none;
+  background-color: rgba(0, 0, 0, 0);
+  background-image: url("./images/buttonBackground.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  position: relative;
 }
 .bird-app select:focus {
   border-color: skyblue;
@@ -31,19 +63,27 @@
   width: 70px;
 }
 .bird-app input[type=text], .bird-app input[type=number] {
+  height: 30px;
+  font-family: "Cardenio Modern";
   padding: 10px;
-  margin: 2px 0;
-  font-size: 12pt;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  margin: 8px 20px 8px 0;
+  font-size: 16pt;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  background-image: url("./images/buttonBackground.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   outline: none;
 }
 .bird-app input[type=text]:focus, .bird-app input[type=number]:focus {
   border-color: skyblue;
 }
 .bird-app .bird-search-bar {
+  margin: 10px;
   z-index: 1;
   position: relative;
+  padding: 10px;
+  width: fit-content;
 }
 .bird-app .bird-search-bar fieldset {
   position: relative;
@@ -52,14 +92,15 @@
   flex-wrap: wrap;
   border: none;
   padding: 2px 0px;
+  width: fit-content;
 }
 .bird-app .bird-search-bar fieldset .bird-species-search-tool {
   display: flex;
   flex-direction: column;
-  width: 402px;
+  width: 396px;
 }
 .bird-app .bird-search-bar fieldset .bird-species-search-tool input {
-  margin: 2px 0px 0px;
+  margin: 8px 20px 8px 0;
 }
 .bird-app .bird-search-bar fieldset .bird-species-search-tool input.open {
   border-radius: 4px 4px 0 0;
@@ -71,15 +112,14 @@
   border-color: skyblue;
 }
 .bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu {
+  margin-top: -10px;
+  margin-left: 1px;
   height: 0px;
 }
 .bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container {
   max-height: 300px;
   overflow-y: auto;
   border-color: #eee;
-  border-style: solid;
-  border-width: 0px 1px 1px 1px;
-  border-radius: 0px 0px 4px 4px;
 }
 .bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container div {
   display: flex;
@@ -88,6 +128,7 @@
 }
 .bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container div .species-option {
   background-color: white;
+  background-image: url("./images/backgroundRectangle.png");
   min-height: 40px;
   color: inherit;
   border: none;
@@ -96,7 +137,6 @@
   margin: 0px;
   border-radius: 0px;
   min-width: 220px;
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 12pt;
   cursor: pointer;
   outline: inherit;
