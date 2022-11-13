@@ -112,3 +112,19 @@ export const getRegionSpeciesList = async (regionCode) => {
     const data = await response.json();
     return data;
 }
+
+export const getPixabay = async (keyword) => {
+    const response = await fetch(`https://pixabay.olivecodes.co.uk/api/?q=${keyword}&image_type=photo&category=animals`, {
+        method: "GET",
+        withCredentials: true,
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        cache: 'no-store',
+    })
+    if(!response.ok) {
+        throw new Error("Bad response");
+    }
+    const data = await response.json();
+    return data;
+}
