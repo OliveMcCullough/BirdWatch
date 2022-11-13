@@ -88,7 +88,7 @@ const BirdResults = (props) => {
       <Fragment>
         <div className="speciesDisplay">
           {speciesInResults.map(speciesInstance => (
-            <div key={speciesInstance.speciesCode} className="polaroid"> <div> <img src={speciesCodeImagesDict[speciesInstance.speciesCode]}/> </div> <span>{speciesInstance.comName}</span> </div>
+            <div key={speciesInstance.speciesCode} className="polaroid"> <div className={typeof speciesCodeImagesDict[speciesInstance.speciesCode] === "string"?"":"hidden"}> <img src={speciesCodeImagesDict[speciesInstance.speciesCode]}/> </div> <span class="common">{speciesInstance.comName} </span> <span class="scientific"> ({speciesInstance.sciName})</span> </div>
           ))}
         </div>
         <ul>
