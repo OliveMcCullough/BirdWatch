@@ -60,9 +60,9 @@ const BirdApp = (props) => {
     return (
       <div className="bird_app">
           <div className="intro_section">
-          <h1> Welcome to BirdWatch (WIP) </h1>
-          <p> BirdWatch is a project by <a href="https://github.com/OliveMcCullough"> Olive McCullough </a> that uses the eBird API, the Pixabay API, and a number of geolocation APIs to help you discover what birds can be found near you. </p>
-        </div>
+            <h1> Welcome to BirdWatch (WIP) </h1>
+            <p> BirdWatch is a project by <a href="https://github.com/OliveMcCullough"> Olive McCullough </a> that uses the eBird API, the Pixabay API, and a number of geolocation APIs to help you discover what birds can be found near you. </p>
+          </div>
         <BirdSearchBar
           taxonomy={taxonomy}
           taxonomyLoaded={taxonomyLoaded}
