@@ -60,15 +60,15 @@ const BirdSpeciesListComponent = (props) => {
       const dropDownOpen = speciesDisplayed.length > 0 && props.selectedSpecies.code === null;
       if(typeof props.selectedSpecies.code !== "string") {
           return (
-            <div className="bird-species-search-tool"> 
+            <div className="bird_species_search_tool"> 
               <input type="text" className={dropDownOpen?"open":""} value={searchText} onChange={event => updateSearchText(event)}/>
-              <div className="drop-down-menu">
-                <div className="drop-down-scroll-container">
+              <div className="drop_down_menu">
+                <div className="drop_down_scroll_container">
                   <div>
                     {speciesDisplayed.slice(0,10).map(speciesEntry => (
                         <button 
                           key={speciesEntry.speciesCode} 
-                          className="species-option" 
+                          className="species_option" 
                           data-species-code={speciesEntry.speciesCode}
                           onClick={(event) => selectSpeciesHandler(event)}
                         > 
@@ -82,7 +82,7 @@ const BirdSpeciesListComponent = (props) => {
           )
       } else {
         return (
-          <div className="bird-species-search-tool"> 
+          <div className="bird_species_search_tool"> 
             <input type="text" className={dropDownOpen?"open":""} value={props.selectedSpecies.name} onChange={event => updateSearchText(event)}/>
           </div> 
         )
