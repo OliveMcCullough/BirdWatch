@@ -12,7 +12,18 @@ body {
   font-style: normal;
   font-display: swap;
 }
-.bird-app button {
+.bird_app .intro_section {
+  font-family: "Cardenio Modern";
+  width: 90%;
+  margin: auto;
+}
+.bird_app .intro_section h1 {
+  color: white;
+}
+.bird_app .intro_section p {
+  font-size: 15pt;
+}
+.bird_app button {
   border: 0px solid #eee;
   font-size: 16pt;
   height: 50px;
@@ -29,15 +40,15 @@ body {
   min-width: 160px;
   position: relative;
 }
-.bird-app button:hover {
+.bird_app button:hover {
   box-shadow: inset 0 0 0 1000px rgba(192, 174, 14, 0.2);
 }
-.bird-app button:disabled {
+.bird_app button:disabled {
   color: #aaa;
   box-shadow: inset 0 0 0 1000px rgba(112, 112, 112, 0.2);
   cursor: default;
 }
-.bird-app select {
+.bird_app select {
   text-align: center;
   min-width: 160px;
   font-family: "Cardenio Modern";
@@ -53,16 +64,16 @@ body {
   background-size: 100% 100%;
   position: relative;
 }
-.bird-app select:focus {
+.bird_app select:focus {
   border-color: skyblue;
 }
-.bird-app input[type=text] {
+.bird_app input[type=text] {
   width: 380px;
 }
-.bird-app input[type=number] {
+.bird_app input[type=number] {
   width: 70px;
 }
-.bird-app input[type=text], .bird-app input[type=number] {
+.bird_app input[type=text], .bird_app input[type=number] {
   height: 30px;
   font-family: "Cardenio Modern";
   padding: 10px;
@@ -75,17 +86,44 @@ body {
   background-size: 100% 100%;
   outline: none;
 }
-.bird-app input[type=text]:focus, .bird-app input[type=number]:focus {
+.bird_app input[type=text]:focus, .bird_app input[type=number]:focus {
   border-color: skyblue;
 }
-.bird-app .bird-search-bar {
-  margin: 10px;
+.bird_app .speciesDisplay {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-x: auto;
+  padding: 20px;
+  justify-content: space-around;
+}
+.bird_app .speciesDisplay .polaroid {
+  margin: 20px;
+  width: 280px;
+  height: 250px;
+  background-image: url("./images/polaroid.png");
+  background-size: contain;
+  padding: 15px;
+  box-shadow: 1px 1px 7px 2px rgba(44, 44, 44, 0.25);
+}
+.bird_app .speciesDisplay .polaroid > div {
+  margin: 0px auto;
+  width: 280px;
+  height: 220px;
+}
+.bird_app .speciesDisplay .polaroid > div > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: black;
+}
+.bird_app .bird_search_bar {
   z-index: 1;
   position: relative;
   padding: 10px;
   width: fit-content;
+  margin: auto;
 }
-.bird-app .bird-search-bar fieldset {
+.bird_app .bird_search_bar fieldset {
   position: relative;
   z-index: 0;
   display: flex;
@@ -94,39 +132,39 @@ body {
   padding: 2px 0px;
   width: fit-content;
 }
-.bird-app .bird-search-bar fieldset .bird-species-search-tool {
+.bird_app .bird_search_bar fieldset .bird_species_search_tool {
   display: flex;
   flex-direction: column;
   width: 396px;
 }
-.bird-app .bird-search-bar fieldset .bird-species-search-tool input {
+.bird_app .bird_search_bar fieldset .bird_species_search_tool input {
   margin: 8px 20px 8px 0;
 }
-.bird-app .bird-search-bar fieldset .bird-species-search-tool input.open {
+.bird_app .bird_search_bar fieldset .bird_species_search_tool input.open {
   border-radius: 4px 4px 0 0;
 }
-.bird-app .bird-search-bar fieldset .bird-species-search-tool input.open:focus {
+.bird_app .bird_search_bar fieldset .bird_species_search_tool input.open:focus {
   border-color: skyblue skyblue #eee skyblue;
 }
-.bird-app .bird-search-bar fieldset .bird-species-search-tool input.open:focus + .drop-down-menu .drop-down-scroll-container {
+.bird_app .bird_search_bar fieldset .bird_species_search_tool input.open:focus + .drop-down-menu .drop-down-scroll-container {
   border-color: skyblue;
 }
-.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu {
+.bird_app .bird_search_bar fieldset .bird_species_search_tool .drop_down_menu {
   margin-top: -10px;
   margin-left: 1px;
   height: 0px;
 }
-.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container {
+.bird_app .bird_search_bar fieldset .bird_species_search_tool .drop_down_menu .drop_down_scroll_container {
   max-height: 300px;
   overflow-y: auto;
   border-color: #eee;
 }
-.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container div {
+.bird_app .bird_search_bar fieldset .bird_species_search_tool .drop_down_menu .drop_down_scroll_container div {
   display: flex;
   flex-direction: column;
   flex: none;
 }
-.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container div .species-option {
+.bird_app .bird_search_bar fieldset .bird_species_search_tool .drop_down_menu .drop_down_scroll_container div .species_option {
   background-color: white;
   background-image: url("./images/backgroundRectangle.png");
   min-height: 40px;
@@ -142,9 +180,9 @@ body {
   outline: inherit;
   text-align: left;
 }
-.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container div .species-option:first-child {
+.bird_app .bird_search_bar fieldset .bird_species_search_tool .drop_down_menu .drop_down_scroll_container div .species_option:first-child {
   border-top: none;
 }
-.bird-app .bird-search-bar fieldset .bird-species-search-tool .drop-down-menu .drop-down-scroll-container div .species-option:hover {
+.bird_app .bird_search_bar fieldset .bird_species_search_tool .drop_down_menu .drop_down_scroll_container div .species_option:hover {
   background-color: #eee;
 }/*# sourceMappingURL=index.css.map */
