@@ -86,9 +86,9 @@ const BirdResults = (props) => {
   
     return (
       <Fragment>
-        <div>
+        <div className="speciesDisplay">
           {speciesInResults.map(speciesInstance => (
-            <div key={speciesInstance.speciesCode}> {speciesInstance.comName} <img src={speciesCodeImagesDict[speciesInstance.speciesCode]}/> </div>
+            <div key={speciesInstance.speciesCode} className="polaroid"> <div> <img src={speciesCodeImagesDict[speciesInstance.speciesCode]}/> </div> <span>{speciesInstance.comName}</span> </div>
           ))}
         </div>
         <ul>
