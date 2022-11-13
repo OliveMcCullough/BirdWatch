@@ -12,6 +12,13 @@ body {
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: "Blacksword";
+  src: url("./fonts/Blacksword.woff2") format("woff2"), url("./fonts/Blacksword.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 .bird_app .intro_section {
   font-family: "Cardenio Modern";
   width: 90%;
@@ -108,10 +115,15 @@ body {
 .bird_app .speciesDisplay .polaroid > div {
   margin: 0px auto;
   width: 280px;
-  height: 220px;
+  height: 200px;
   position: relative;
 }
+.bird_app .speciesDisplay .polaroid > div.hidden::after {
+  background-color: black;
+}
 .bird_app .speciesDisplay .polaroid > div::after {
+  transition: background-color 3s ease;
+  background-color: rgba(0, 0, 0, 0);
   box-shadow: inset 0px 0px 3px 1px rgba(44, 44, 44, 0.25);
   content: "";
   display: block;
@@ -124,7 +136,18 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background-color: black;
+}
+.bird_app .speciesDisplay .polaroid > span {
+  font-family: "Blacksword";
+  display: block;
+  margin-left: 10px;
+}
+.bird_app .speciesDisplay .polaroid > span.common {
+  font-size: 14pt;
+}
+.bird_app .speciesDisplay .polaroid > span.scientific {
+  font-size: 12pt;
+  color: #777;
 }
 .bird_app .bird_search_bar {
   z-index: 1;
