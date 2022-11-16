@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from 'react';
 import {getCountryInfo} from './api_functions';
 
 import BirdSpeciesListComponent from './bird_species_list_component';
-import { PotentialError, SearchAttributes, SelectedSpecies, Taxonomy } from './interfaces';
+import {SearchAttributes, SelectedSpecies, Taxonomy } from './interfaces';
 
 interface BirdSearchBarProps {
   searchReady: Boolean;
@@ -10,7 +10,7 @@ interface BirdSearchBarProps {
   setSearchAttributes: React.Dispatch<React.SetStateAction<SearchAttributes>>;
   taxonomy: Taxonomy;
   taxonomyLoaded: Boolean;
-  taxonomyError: PotentialError;
+  taxonomyError: Error | undefined;
 }
 
 interface CountryData {
@@ -26,18 +26,18 @@ type GeoType = "coordinates" | "area";
 
 // Component that corresponds to search bar, and handles all the search criteria
 const BirdSearchBar = (props:BirdSearchBarProps) => {
-    const [localAreaCode, setLocalAreaCode] = useState<string | null>(null);
-    const [localSpecies, setLocalSpecies] = useState<SelectedSpecies>({name: null, code: null});
-    const [localLattitude, setLocalLattitude] = useState<number | null>(null);
-    const [localLongitude, setLocalLongitude] = useState<number | null>(null);
+    const [localAreaCode, setLocalAreaCode] = useState<string | undefined>(undefined);
+    const [localSpecies, setLocalSpecies] = useState<SelectedSpecies>({name: undefined, code: undefined});
+    const [localLattitude, setLocalLattitude] = useState<number | undefined>(undefined);
+    const [localLongitude, setLocalLongitude] = useState<number | undefined>(undefined);
     const [searchByGeoType, setSearchByGeoType] = useState<GeoType>("coordinates");
     const [searchFor, setSearchFor] = useState<SearchFor>("all");
     
     const [countryCodeList, setCountryCodeList] = useState<CountryCodeList>([]);
-    const [countryListError, setCountryListError] = useState<PotentialError>(null);
+    const [countryListError, setCountryListError] = useState<Error | undefined>(undefined);
     const [countryListReady, setCountryListReady] = useState<Boolean>(true);
   
-    const [exactLocationError, setExactLocationError] = useState<PotentialError>(null);
+    const [exactLocationError, setExactLocationError] = useState<Error | undefined>(undefined);
   
     // run this once parent says the search is ready
     useEffect( () => {
@@ -67,7 +67,7 @@ const BirdSearchBar = (props:BirdSearchBarProps) => {
     const checkSubmittable = () => {
       const checkGeoSubmittable = () => {
         if(searchByGeoType === "area") {
-          if(localAreaCode !== null) {
+          if(localAreaCode) {
             return true;
           }
         } else if (searchByGeoType === "coordinates") {
@@ -82,7 +82,7 @@ const BirdSearchBar = (props:BirdSearchBarProps) => {
   
       const checkSearchForSubmittable = () => {
         if(searchFor === "species") {
-          if(localSpecies.code !== null) {
+          if(localSpecies.code) {
             return true;
           }
         }
@@ -99,10 +99,10 @@ const BirdSearchBar = (props:BirdSearchBarProps) => {
       event.preventDefault();
       if(checkSubmittable()) {
         const attributes:SearchAttributes = {
-          areaCode: null,
-          speciesCode: null,
-          lattitude: null,
-          longitude: null,
+          areaCode: undefined,
+          speciesCode: undefined,
+          lattitude: undefined,
+          longitude: undefined,
           searchNotable: false
         }
   
@@ -130,8 +130,8 @@ const BirdSearchBar = (props:BirdSearchBarProps) => {
       if(searchByGeoType === "coordinates") {
         return (
           <Fragment>
-            <input type="number" min="-90" max="90" step="0.01" value={(typeof localLattitude == "number"? localLattitude:"")} onChange={(event) => (event.target.value===""?setLocalLattitude(null):setLocalLattitude(parseFloat(event.target.value)))}/>
-            <input type="number" min="-180" max= "180" step="0.01" value={(typeof localLongitude == "number"? localLongitude:"")} onChange={(event) => (event.target.value===""?setLocalLongitude(null):setLocalLongitude(parseFloat(event.target.value)))}/>
+            <input type="number" min="-90" max="90" step="0.01" value={(typeof localLattitude == "number"? localLattitude:"")} onChange={(event) => (event.target.value===""?setLocalLattitude(undefined):setLocalLattitude(parseFloat(event.target.value)))}/>
+            <input type="number" min="-180" max= "180" step="0.01" value={(typeof localLongitude == "number"? localLongitude:"")} onChange={(event) => (event.target.value===""?setLocalLongitude(undefined):setLocalLongitude(parseFloat(event.target.value)))}/>
             {navigator.geolocation?<button type="button" onClick={useExactLocationButtonHandler}> Use my exact location </button>:null}
           </Fragment>
         )
@@ -179,15 +179,17 @@ const BirdSearchBar = (props:BirdSearchBarProps) => {
     const setSearchGeoTypeHandler = (event:React.ChangeEvent<HTMLSelectElement>) => {
       const target = event.target; 
       const value = target.value;
-      if(value === "coordinates" || value === "area")
+      if(value === "coordinates" || value === "area") {
         setSearchByGeoType(value)
+      }
     }
 
     const setSearchForHandler = (event:React.ChangeEvent<HTMLSelectElement>) => {
       const target = event.target; 
       const value = target.value;
-      if(value === "all" || value === "species" || value === "notable")
+      if(value === "all" || value === "species" || value === "notable") {
         setSearchFor(value)
+      }
     }
   
     return (

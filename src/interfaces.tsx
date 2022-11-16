@@ -6,17 +6,15 @@ export interface TaxonomyEntry {
 
 export type Taxonomy = TaxonomyEntry[];
 
-export type PotentialError = null | Error;
-
 export interface SearchAttributes {
-  areaCode: string | null;
-  speciesCode: string | null;
-  lattitude: number | null;
-  longitude: number | null;
+  areaCode: string | undefined;
+  speciesCode: string | undefined;
+  lattitude: number | undefined;
+  longitude: number | undefined;
   searchNotable: Boolean;
 }
 
 export interface SelectedSpecies {
-  name: string | null;
-  code: string | null;
+  name: string | undefined;
+  code: string | undefined;
 }

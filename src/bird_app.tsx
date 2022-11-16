@@ -3,7 +3,7 @@ import {getEBirdTaxonomy, getIpGeo} from './api_functions'
 
 import BirdSearchBar from './bird_search_bar';
 import BirdResults from './bird_results';
-import { PotentialError, SearchAttributes, Taxonomy, TaxonomyEntry } from './interfaces';
+import { SearchAttributes, Taxonomy, TaxonomyEntry } from './interfaces';
 
 export interface BirdAppProps {
 
@@ -12,16 +12,16 @@ export interface BirdAppProps {
 const BirdApp = (props: BirdAppProps) => {
     const [taxonomy, setTaxonomy] = useState<Taxonomy>([]);
     const [taxonomyLoaded, setTaxonomyLoaded] = useState<Boolean>(false);
-    const [taxonomyError, setTaxonomyError] = useState<PotentialError>(null);
+    const [taxonomyError, setTaxonomyError] = useState<Error | undefined>(undefined);
   
-    const [ipGeoError, setIpGeoError] = useState<PotentialError>(null);
+    const [ipGeoError, setIpGeoError] = useState<Error | undefined>(undefined);
   
     const [searchAttributes, setSearchAttributes] = useState<SearchAttributes>(
       {
-        areaCode: null,
-        speciesCode: null,
-        lattitude: null,
-        longitude: null,
+        areaCode: undefined,
+        speciesCode: undefined,
+        lattitude: undefined,
+        longitude: undefined,
         searchNotable: false
       }
     );
@@ -40,7 +40,7 @@ const BirdApp = (props: BirdAppProps) => {
     }, []);
   
     useEffect( () => {
-      if(searchAttributes.areaCode === null && searchAttributes.lattitude === null && searchAttributes.longitude === null) {
+      if(!searchAttributes.areaCode && !searchAttributes.lattitude && !searchAttributes.longitude) {
         getIpGeo().catch((error) => {
           setIpGeoError(error);
           // in case of error assign some default values

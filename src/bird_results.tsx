@@ -1,9 +1,9 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import {getRecentBirdObservations, getPixabay} from './api_functions'
-import { PotentialError, SearchAttributes, Taxonomy } from './interfaces';
+import { SearchAttributes, Taxonomy } from './interfaces';
 
 interface BirdResultsProps {
-  taxonomyError: PotentialError;
+  taxonomyError: Error | undefined;
   searchReady: Boolean;
   searchAttributes: SearchAttributes;
   taxonomyLoaded: Boolean;
@@ -31,7 +31,7 @@ type SpeciesCodeImageDict = {[key:string]:string|undefined};
 
 const BirdResults = (props: BirdResultsProps) => {
     const[results, setResults] = useState<ObservationResult[]>([]);
-    const[error, setError] = useState<PotentialError>(null);
+    const[error, setError] = useState<Error | undefined>(undefined);
     const[isLoaded, setIsLoaded] = useState<Boolean>(false);
   
     const[speciesInResults, setSpeciesInResults] = useState<Taxonomy>([]);

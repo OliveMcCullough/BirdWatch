@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import {getRegionSpeciesList} from './api_functions'
-import { PotentialError, SelectedSpecies, Taxonomy } from './interfaces';
+import { SelectedSpecies, Taxonomy } from './interfaces';
 
 interface BirdSpeciesListComponentProps {
   taxonomyLoaded: Boolean;
-  taxonomyError: PotentialError;
-  areaCode: string | null;
+  taxonomyError: Error | undefined;
+  areaCode: string | undefined;
   taxonomy: Taxonomy;
   selectedSpecies: SelectedSpecies;
   setSelectedSpecies: React.Dispatch<React.SetStateAction<SelectedSpecies>>;
@@ -16,13 +16,13 @@ const BirdSpeciesListComponent = (props:BirdSpeciesListComponentProps) => {
     const [speciesDisplayed, setSpeciesDisplayed] = useState<Taxonomy>([]);
   
     const [speciesList, setSpeciesList] = useState<Taxonomy>([]);
-    const [speciesError, setSpeciesError] = useState<PotentialError>(null);
+    const [speciesError, setSpeciesError] = useState<Error | undefined>(undefined);
     const [speciesLoaded, setSpeciesLoaded] = useState<Boolean>(false);
   
     // if taxonomy is present, get the local species list based on areaCode
     // use taxonomy to get human readable information from speciesCodes list
     useEffect( () => {
-      if(props.taxonomyLoaded && !(props.taxonomyError instanceof Error) && props.areaCode !== null)
+      if(props.taxonomyLoaded && !(props.taxonomyError instanceof Error) && props.areaCode)
       {
         setSpeciesList([]);
         getRegionSpeciesList(props.areaCode).catch((error) => {
@@ -57,7 +57,7 @@ const BirdSpeciesListComponent = (props:BirdSpeciesListComponentProps) => {
       //const speciesDisplayed = getSpeciesDisplayed(searchText);
       setSearchText(searchText);
       //setSpeciesDisplayed(speciesDisplayed);
-      props.setSelectedSpecies({name: null, code: null});
+      props.setSelectedSpecies({name: undefined, code: undefined});
     }
   
     const selectSpeciesHandler = (event:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -65,7 +65,10 @@ const BirdSpeciesListComponent = (props:BirdSpeciesListComponentProps) => {
       if(!(target.getAttribute("data-species-code") && target.textContent)){
         return ;
       }
-      const speciesCode = target.getAttribute("data-species-code");
+      let speciesCode:undefined|null|string = target.getAttribute("data-species-code");
+      if (speciesCode === null) {
+        speciesCode = undefined;
+      }
       const speciesName = target.textContent;
       props.setSelectedSpecies({name: speciesName, code: speciesCode});
     }
@@ -102,7 +105,7 @@ const BirdSpeciesListComponent = (props:BirdSpeciesListComponentProps) => {
 
     return (
       <div className="bird_species_search_tool">
-        {renderBirdSpeciesSearchToolContent(speciesDisplayed.length > 0 && props.selectedSpecies.code === null)}
+        {renderBirdSpeciesSearchToolContent(speciesDisplayed.length > 0 && !props.selectedSpecies.code)}
       </div>
     )
 }
