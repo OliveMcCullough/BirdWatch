@@ -1,26 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {getEBirdTaxonomy, getIpGeo} from './api_functions'
 
 import BirdSearchBar from './bird_search_bar';
 import BirdResults from './bird_results';
+import { SearchAttributes, Taxonomy, TaxonomyEntry } from './interfaces';
 
-const BirdApp = (props) => {
-    const [taxonomy, setTaxonomy] = useState({});
-    const [taxonomyLoaded, setTaxonomyLoaded] = useState(false);
-    const [taxonomyError, setTaxonomyError] = useState(null);
+export interface BirdAppProps {
+
+}
+
+const BirdApp = (props: BirdAppProps) => {
+    const [taxonomy, setTaxonomy] = useState<Taxonomy>([]);
+    const [taxonomyLoaded, setTaxonomyLoaded] = useState<Boolean>(false);
+    const [taxonomyError, setTaxonomyError] = useState<Error | undefined>(undefined);
   
-    const [ipGeoError, setIpGeoError] = useState(null);
+    const [ipGeoError, setIpGeoError] = useState<Error | undefined>(undefined);
   
-    const [searchAttributes, setSearchAttributes] = useState(
+    const [searchAttributes, setSearchAttributes] = useState<SearchAttributes>(
       {
-        areaCode: null,
-        speciesCode: null,
-        lattitude: null,
-        longitude: null,
+        areaCode: undefined,
+        speciesCode: undefined,
+        lattitude: undefined,
+        longitude: undefined,
         searchNotable: false
       }
     );
-    const [searchReady, setSearchReady] = useState(false);
+    const [searchReady, setSearchReady] = useState<Boolean>(false);
   
     useEffect( () => {
       getEBirdTaxonomy().catch((error) => {
@@ -28,14 +33,14 @@ const BirdApp = (props) => {
         setTaxonomyLoaded(true);
       })
       .then((data) => {
-        const data_filtered = data.map(species => species = {comName: species.comName, sciName: species.sciName, speciesCode: species.speciesCode});
+        const data_filtered:Taxonomy = data.map((species:TaxonomyEntry) => {return {comName: species.comName, sciName: species.sciName, speciesCode: species.speciesCode}});
         setTaxonomy(data_filtered);
         setTaxonomyLoaded(true);
       })
     }, []);
   
     useEffect( () => {
-      if(searchAttributes.areaCode === null && searchAttributes.lattitude === null && searchAttributes.longitude === null) {
+      if(!searchAttributes.areaCode && !searchAttributes.lattitude && !searchAttributes.longitude) {
         getIpGeo().catch((error) => {
           setIpGeoError(error);
           // in case of error assign some default values

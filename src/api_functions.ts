@@ -1,4 +1,10 @@
-export const getRecentBirdObservations = async (attributes) => {
+import { SearchAttributes } from "./interfaces";
+
+interface EBirdHeader {
+    "X-eBirdApiToken": string;
+}
+
+export const getRecentBirdObservations = async (attributes:SearchAttributes) => {
 
     // # Other attributes that could be used: distance (if not area), days since
 
@@ -50,12 +56,11 @@ export const getRecentBirdObservations = async (attributes) => {
     }
 };
 
-const getBirdData = async (url_data) => {
+const getBirdData = async (url_data: string) => {
     const response = await fetch(`https://api.ebird.org/v2/data/${url_data}`, {
         method: "GET",
-        withCredentials: true,
         headers: {
-            "X-eBirdApiToken": process.env.REACT_APP_EBIRD_API_KEY
+            "X-eBirdApiToken": process.env.REACT_APP_EBIRD_API_KEY || ""
         }
     })
     if(!response.ok) {
@@ -77,9 +82,8 @@ export const getIpGeo = async () => {
 export const getEBirdTaxonomy = async () => {
     const response = await fetch("https://api.ebird.org/v2/ref/taxonomy/ebird?fmt=json", {
         method: "GET",
-        withCredentials: true,
         headers: {
-        "X-eBirdApiToken": process.env.REACT_APP_EBIRD_API_KEY
+            "X-eBirdApiToken": process.env.REACT_APP_EBIRD_API_KEY || ""
         }
     })
     if(!response.ok) {
@@ -98,12 +102,11 @@ export const getEBirdTaxonomy = async () => {
     return data;
 }
 
-export const getRegionSpeciesList = async (regionCode) => {
+export const getRegionSpeciesList = async (regionCode:string) => {
     const response = await fetch(`https://api.ebird.org/v2/product/spplist/${regionCode}`, {
         method: "GET",
-        withCredentials: true,
         headers: {
-        "X-eBirdApiToken": process.env.REACT_APP_EBIRD_API_KEY
+            "X-eBirdApiToken": process.env.REACT_APP_EBIRD_API_KEY || ""
         }
     })
     if(!response.ok) {
@@ -113,12 +116,11 @@ export const getRegionSpeciesList = async (regionCode) => {
     return data;
 }
 
-export const getPixabay = async (keyword) => {
+export const getPixabay = async (keyword:string) => {
     const response = await fetch(`https://pixabay.olivecodes.co.uk/api/?q=${keyword}&image_type=photo&category=animals`, {
         method: "GET",
-        withCredentials: true,
         headers: {
-        'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
         },
         cache: 'no-store',
     })
