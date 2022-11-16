@@ -1,13 +1,41 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import {getRecentBirdObservations, getPixabay} from './api_functions'
+import { PotentialError, SearchAttributes, Taxonomy } from './interfaces';
 
-const BirdResults = (props) => {
-    const[results, setResults] = useState([]);
-    const[error, setError] = useState(null);
-    const[isLoaded, setIsLoaded] = useState(false);
+interface BirdResultsProps {
+  taxonomyError: PotentialError;
+  searchReady: Boolean;
+  searchAttributes: SearchAttributes;
+  taxonomyLoaded: Boolean;
+  taxonomy: Taxonomy;
+}
+
+interface ObservationResult {
+  subId: string;
+  speciesCode: string;
+  comName: string;
+  sciName: string;
+  howMany: number;
+  locName: string;
+  lat: number;
+  lng: number;
+  obsDt: string;
+}
+
+interface FoundImageData {
+  webformatURL: string;
+  tags: string;
+}
+
+type SpeciesCodeImageDict = {[key:string]:string|undefined};
+
+const BirdResults = (props: BirdResultsProps) => {
+    const[results, setResults] = useState<ObservationResult[]>([]);
+    const[error, setError] = useState<PotentialError>(null);
+    const[isLoaded, setIsLoaded] = useState<Boolean>(false);
   
-    const[speciesInResults, setSpeciesInResults] = useState([]);
-    const[speciesCodeImagesDict, setSpeciesCodeImagesDict] = useState({});
+    const[speciesInResults, setSpeciesInResults] = useState<Taxonomy>([]);
+    const[speciesCodeImagesDict, setSpeciesCodeImagesDict] = useState<SpeciesCodeImageDict>({});
   
     // when given a search, search for it
     useEffect( () => {
@@ -26,9 +54,9 @@ const BirdResults = (props) => {
   
     // when new results are available, get a list of all species codes
     useEffect( () => {
-      if(props.searchReady && props.taxonomyLoaded && typeof props.taxonomyError !== Error)
+      if(props.searchReady && props.taxonomyLoaded && !(props.taxonomyError instanceof Error))
       {
-        const newSpeciesCodesInResults = [];
+        const newSpeciesCodesInResults:string[] = [];
         results.forEach(logEntry => {
           if (!(newSpeciesCodesInResults.includes(logEntry.speciesCode))) {
             newSpeciesCodesInResults.push(logEntry.speciesCode);
@@ -58,12 +86,12 @@ const BirdResults = (props) => {
             // find the best entry:
             let result;
             // first, within the data, look through tags for scientific name
-            result = data.hits.find(hit => {
+            result = data.hits.find((hit:FoundImageData) => {
               return hit.tags.toLowerCase().includes(notIncluded[0].sciName.toLowerCase());
             });
             // then if not found, try formal common name
             if(result === undefined) {
-              result = data.hits.find(hit => {
+              result = data.hits.find((hit:FoundImageData) => {
                 return hit.tags.toLowerCase().includes(notIncluded[0].comName.toLowerCase());
               });
             }
@@ -77,7 +105,7 @@ const BirdResults = (props) => {
           } else {
             // update the array with no image
             const newSpeciesCodeImagesDict = {...speciesCodeImagesDict};
-            newSpeciesCodeImagesDict[notIncluded[0].speciesCode] = null;
+            newSpeciesCodeImagesDict[notIncluded[0].speciesCode] = undefined;
             setSpeciesCodeImagesDict(newSpeciesCodeImagesDict);
           }
         })
@@ -88,12 +116,12 @@ const BirdResults = (props) => {
       <Fragment>
         <div className="speciesDisplay">
           {speciesInResults.map(speciesInstance => (
-            <div key={speciesInstance.speciesCode} className="polaroid"> <div className={typeof speciesCodeImagesDict[speciesInstance.speciesCode] === "string"?"":"hidden"}> <img src={speciesCodeImagesDict[speciesInstance.speciesCode]}/> </div> <span class="common">{speciesInstance.comName} </span> <span class="scientific"> ({speciesInstance.sciName})</span> </div>
+            <div key={speciesInstance.speciesCode} className="polaroid"> <div className={typeof speciesCodeImagesDict[speciesInstance.speciesCode] === "string"?"":"hidden"}> <img src={speciesCodeImagesDict[speciesInstance.speciesCode]}/> </div> <span className="common">{speciesInstance.comName} </span> <span className="scientific"> ({speciesInstance.sciName})</span> </div>
           ))}
         </div>
         <ul>
-          {results.map(birdObservation => (
-            <li key={birdObservation.subId+birdObservation.speciesCode}> {birdObservation.comName} ({birdObservation.sciName}) - {birdObservation.howMany} - {birdObservation.locName} - {birdObservation.lat}, {birdObservation.lng} - {birdObservation.obsDt} </li>
+          {results.map(result => (
+            <li key={result.subId+result.speciesCode}> {result.comName} ({result.sciName}) - {result.howMany} - {result.locName} - {result.lat}, {result.lng} - {result.obsDt} </li>
           ))}
         </ul>
       </Fragment>

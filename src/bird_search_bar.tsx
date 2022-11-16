@@ -2,21 +2,42 @@ import React, { useEffect, useState, Fragment } from 'react';
 import {getCountryInfo} from './api_functions';
 
 import BirdSpeciesListComponent from './bird_species_list_component';
+import { PotentialError, SearchAttributes, SelectedSpecies, Taxonomy } from './interfaces';
+
+interface BirdSearchBarProps {
+  searchReady: Boolean;
+  searchAttributes: SearchAttributes;
+  setSearchAttributes: React.Dispatch<React.SetStateAction<SearchAttributes>>;
+  taxonomy: Taxonomy;
+  taxonomyLoaded: Boolean;
+  taxonomyError: PotentialError;
+}
+
+interface CountryData {
+  name: string;
+  code: string;
+}
+
+type CountryCodeList = CountryData[];
+
+type SearchFor = "all" | "species" | "notable";
+
+type GeoType = "coordinates" | "area";
 
 // Component that corresponds to search bar, and handles all the search criteria
-const BirdSearchBar = (props) => {
-    const [localAreaCode, setLocalAreaCode] = useState(null);
-    const [localSpecies, setLocalSpecies] = useState({name: null, code: null});
-    const [localLattitude, setLocalLattitude] = useState(null);
-    const [localLongitude, setLocalLongitude] = useState(null);
-    const [searchByGeoType, setSearchByGeoType] = useState("coordinates");
-    const [searchFor, setSearchFor] = useState("all");
+const BirdSearchBar = (props:BirdSearchBarProps) => {
+    const [localAreaCode, setLocalAreaCode] = useState<string | null>(null);
+    const [localSpecies, setLocalSpecies] = useState<SelectedSpecies>({name: null, code: null});
+    const [localLattitude, setLocalLattitude] = useState<number | null>(null);
+    const [localLongitude, setLocalLongitude] = useState<number | null>(null);
+    const [searchByGeoType, setSearchByGeoType] = useState<GeoType>("coordinates");
+    const [searchFor, setSearchFor] = useState<SearchFor>("all");
     
-    const [countryCodeList, setCountryCodeList] = useState([]);
-    const [countryListError, setCountryListError] = useState(null);
-    const [countryListReady, setCountryListReady] = useState(true);
+    const [countryCodeList, setCountryCodeList] = useState<CountryCodeList>([]);
+    const [countryListError, setCountryListError] = useState<PotentialError>(null);
+    const [countryListReady, setCountryListReady] = useState<Boolean>(true);
   
-    const [exactLocationError, setExactLocationError] = useState(null);
+    const [exactLocationError, setExactLocationError] = useState<PotentialError>(null);
   
     // run this once parent says the search is ready
     useEffect( () => {
@@ -34,8 +55,8 @@ const BirdSearchBar = (props) => {
         setCountryListReady(true);
       })
       .then((data) => {
-        const data_filtered = data.map(country => country = {"name":country.name.common, "code":country.cca2});
-        const data_filterered_ordered = data_filtered.sort( (a, b) => {
+        const data_filtered = data.map((country:any) => country = {"name":country.name.common, "code":country.cca2} as CountryData);
+        const data_filterered_ordered = data_filtered.sort( (a:CountryData, b:CountryData) => {
           return a.name.localeCompare(b.name, "en", {sensitivity: "base"})
         })
         setCountryCodeList(data_filterered_ordered);
@@ -74,10 +95,10 @@ const BirdSearchBar = (props) => {
       return checkGeoSubmittable() && checkSearchForSubmittable();
     }
   
-    const formSubmit = (event) => {
+    const formSubmit = (event:React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if(checkSubmittable()) {
-        const attributes = {
+        const attributes:SearchAttributes = {
           areaCode: null,
           speciesCode: null,
           lattitude: null,
@@ -88,9 +109,11 @@ const BirdSearchBar = (props) => {
         if(searchByGeoType === "area") {
           attributes.areaCode = localAreaCode;
         } else if (searchByGeoType === "coordinates") {
-          attributes.areaCode = localAreaCode;
-          attributes.lattitude = Math.round(localLattitude * 100) / 100;
-          attributes.longitude = Math.round(localLongitude * 100) / 100;
+          if(localLattitude && localLongitude) {
+            attributes.areaCode = localAreaCode;
+            attributes.lattitude = Math.round(localLattitude * 100) / 100;
+            attributes.longitude = Math.round(localLongitude * 100) / 100;
+          }
         }
   
         if(searchFor === "notable") {
@@ -107,12 +130,12 @@ const BirdSearchBar = (props) => {
       if(searchByGeoType === "coordinates") {
         return (
           <Fragment>
-            <input type="number" min="-90" max="90" step="0.01" value={localLattitude} onChange={(event) => (event.target.value===""?setLocalLattitude(""):setLocalLattitude(parseFloat(event.target.value)))}/>
-            <input type="number" min="-180" max= "180" step="0.01" value={localLongitude} onChange={(event) => (event.target.value===""?setLocalLongitude(""):setLocalLongitude(parseFloat(event.target.value)))}/>
+            <input type="number" min="-90" max="90" step="0.01" value={(typeof localLattitude == "number"? localLattitude:"")} onChange={(event) => (event.target.value===""?setLocalLattitude(null):setLocalLattitude(parseFloat(event.target.value)))}/>
+            <input type="number" min="-180" max= "180" step="0.01" value={(typeof localLongitude == "number"? localLongitude:"")} onChange={(event) => (event.target.value===""?setLocalLongitude(null):setLocalLongitude(parseFloat(event.target.value)))}/>
             {navigator.geolocation?<button type="button" onClick={useExactLocationButtonHandler}> Use my exact location </button>:null}
           </Fragment>
         )
-      } else if(searchByGeoType === "area") {
+      } else if(searchByGeoType === "area" && localAreaCode) {
         return (
           <select value={localAreaCode} onChange={(event) => setLocalAreaCode(event.target.value)}>
             {countryCodeList.map(country => (
@@ -139,30 +162,45 @@ const BirdSearchBar = (props) => {
       return null;
     }
   
-    const useExactLocationButtonHandler = (event) => {
-      const success = (position) => {
+    const useExactLocationButtonHandler = (event:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      const success = (position:GeolocationPosition) => {
         setLocalLattitude(Math.round(position.coords.latitude * 100) / 100);
         setLocalLongitude(Math.round(position.coords.longitude * 100) / 100);
       }
   
-      const error = (position) => {
+      const error = (error:GeolocationPositionError) => {
         // handle error
+        setExactLocationError(Error(error.message));
       }
   
       navigator.geolocation.getCurrentPosition(success, error);
+    }
+
+    const setSearchGeoTypeHandler = (event:React.ChangeEvent<HTMLSelectElement>) => {
+      const target = event.target; 
+      const value = target.value;
+      if(value === "coordinates" || value === "area")
+        setSearchByGeoType(value)
+    }
+
+    const setSearchForHandler = (event:React.ChangeEvent<HTMLSelectElement>) => {
+      const target = event.target; 
+      const value = target.value;
+      if(value === "all" || value === "species" || value === "notable")
+        setSearchFor(value)
     }
   
     return (
       <form className="bird_search_bar" onSubmit={formSubmit}>
         <fieldset>
-          <select value={searchByGeoType} onChange={(event) => setSearchByGeoType(event.target.value)}>
+          <select value={searchByGeoType} onChange={(event) => setSearchGeoTypeHandler(event)}>
             <option value="coordinates">Coordinates</option>
             <option value="area">Country</option>
           </select>
           {renderGeoTypeInput()}
         </fieldset>
         <fieldset>
-          <select value={searchFor} onChange={(event) => setSearchFor(event.target.value)}>
+          <select value={searchFor} onChange={(event) => setSearchForHandler(event)}>
             <option value="all">All Species</option>
             <option value="species">Specic Species</option>
             <option value="notable">Notable Sightings</option>
