@@ -1,22 +1,24 @@
+import { useEffect, useState } from "react";
 import { ObservationResult } from "./interfaces";
 
 interface BirdSightingsListProps {
     results: ObservationResult[];
+    speciesFiltered: string[];
 }
 
 const addOrdinalIndicator = (dayNum: number) => {
     switch (dayNum % 10) {
         case 1:
-        return dayNum + "st";
+            return dayNum + "st";
         break;
         case 2:
-        return dayNum + "nd";
+            return dayNum + "nd";
         break;
         case 3:
-        return dayNum + "rd";
+            return dayNum + "rd";
         break;
         default:
-        return dayNum + "th";
+            return dayNum + "th";
         break;
     }
 }
@@ -32,11 +34,22 @@ const formaliseDate = (YearMonthDayHoursMinutes:string) => {
 }
 
 const BirdSightingsList = (props: BirdSightingsListProps) => {
+    const [filteredResults, setFilteredResults] = useState<ObservationResult[]>([]);
+
+    useEffect(() => {
+        if(props.speciesFiltered.length == 0) {
+            setFilteredResults(props.results)
+        } else {
+            const newFilteredResults = props.results.filter(result => props.speciesFiltered.includes(result.speciesCode));
+            setFilteredResults(newFilteredResults)
+        }
+    }, [props.results, props.speciesFiltered])
+
     return (
         <div className="sightingsDisplay">
             <div className="binderRings"> </div>
             <ul>
-              {props.results.map(result => (
+              {filteredResults.map(result => (
                 <li key={result.subId+result.speciesCode}> <span className="common_name">{result.comName}</span> <span className="scientific_name">({result.sciName})</span> <br/>
                 {(result.howMany?`${result.howMany}  spotted`:"Spotted")} around {result.locName} ({result.lat.toFixed(3)}, {result.lng.toFixed(3)}) on {formaliseDate(result.obsDt)} </li>
               ))}

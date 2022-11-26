@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from 'react';
 import {getRecentBirdObservations, getPixabay} from './api_functions'
 import BirdSightingsList from './bird_sightings_list';
 import { ObservationResult, SearchAttributes, SpeciesCodeImageDict, Taxonomy } from './interfaces';
-import SpeciesList from './species_list';
+import BirdSpeciesInResultsList from './bird_species_in_results_list';
 
 interface BirdResultsProps {
   taxonomyError: Error | undefined;
@@ -23,6 +23,7 @@ const BirdResults = (props: BirdResultsProps) => {
     const[isLoaded, setIsLoaded] = useState<Boolean>(false);
   
     const[speciesInResults, setSpeciesInResults] = useState<Taxonomy>([]);
+    const[speciesFiltered, setSpeciesFiltered] = useState<string[]>([])
     const[speciesCodeImagesDict, setSpeciesCodeImagesDict] = useState<SpeciesCodeImageDict>({});
   
     // when given a search, search for it
@@ -42,8 +43,7 @@ const BirdResults = (props: BirdResultsProps) => {
   
     // when new results are available, get a list of all species codes
     useEffect( () => {
-      if(props.searchReady && props.taxonomyLoaded && !(props.taxonomyError instanceof Error))
-      {
+      if(props.searchReady && props.taxonomyLoaded && !(props.taxonomyError instanceof Error)) {
         const newSpeciesCodesInResults:string[] = [];
         results.forEach(logEntry => {
           if (!(newSpeciesCodesInResults.includes(logEntry.speciesCode))) {
@@ -52,6 +52,9 @@ const BirdResults = (props: BirdResultsProps) => {
         });
         // add full species to list if it is included in newly created species code array
         const newSpeciesInResults = props.taxonomy.filter(speciesEntry => newSpeciesCodesInResults.includes(speciesEntry.speciesCode))
+
+        // reset SpeciesFiltered
+        setSpeciesFiltered([]);
 
         setSpeciesInResults(newSpeciesInResults);
       }
@@ -99,13 +102,24 @@ const BirdResults = (props: BirdResultsProps) => {
         })
       }
     }, [speciesInResults, speciesCodeImagesDict])
+
+    const addSpeciesToFilter = (event:React.MouseEvent<HTMLDivElement>, speciesCode: string) => {
+      const newSpeciesFiltered = [...speciesFiltered];
+      if(newSpeciesFiltered.includes(speciesCode)) {
+        const index = newSpeciesFiltered.indexOf(speciesCode);
+        newSpeciesFiltered.splice(index, 1)
+      } else {
+        newSpeciesFiltered.push(speciesCode);
+      }
+      setSpeciesFiltered(newSpeciesFiltered);
+    }
   
     return (
       <Fragment>
         {results.length > 0 &&
         <>
-          <SpeciesList speciesInResults={speciesInResults} speciesCodeImagesDict={speciesCodeImagesDict}></SpeciesList>
-          <BirdSightingsList results={results}></BirdSightingsList>
+          <BirdSpeciesInResultsList addSpeciesToFilter={addSpeciesToFilter} speciesFiltered={speciesFiltered} speciesInResults={speciesInResults} speciesCodeImagesDict={speciesCodeImagesDict}></BirdSpeciesInResultsList>
+          <BirdSightingsList speciesFiltered={speciesFiltered} results={results}></BirdSightingsList>
         </>}
       </Fragment>
     )
