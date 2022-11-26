@@ -1,6 +1,8 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import {getRecentBirdObservations, getPixabay} from './api_functions'
-import { SearchAttributes, Taxonomy } from './interfaces';
+import BirdSightingsList from './bird_sightings_list';
+import { ObservationResult, SearchAttributes, SpeciesCodeImageDict, Taxonomy } from './interfaces';
+import BirdSpeciesInResultsList from './bird_species_in_results_list';
 
 interface BirdResultsProps {
   taxonomyError: Error | undefined;
@@ -10,24 +12,10 @@ interface BirdResultsProps {
   taxonomy: Taxonomy;
 }
 
-interface ObservationResult {
-  subId: string;
-  speciesCode: string;
-  comName: string;
-  sciName: string;
-  howMany: number;
-  locName: string;
-  lat: number;
-  lng: number;
-  obsDt: string;
-}
-
 interface FoundImageData {
   webformatURL: string;
   tags: string;
 }
-
-type SpeciesCodeImageDict = {[key:string]:string|undefined};
 
 const BirdResults = (props: BirdResultsProps) => {
     const[results, setResults] = useState<ObservationResult[]>([]);
@@ -35,6 +23,7 @@ const BirdResults = (props: BirdResultsProps) => {
     const[isLoaded, setIsLoaded] = useState<Boolean>(false);
   
     const[speciesInResults, setSpeciesInResults] = useState<Taxonomy>([]);
+    const[speciesFiltered, setSpeciesFiltered] = useState<string[]>([])
     const[speciesCodeImagesDict, setSpeciesCodeImagesDict] = useState<SpeciesCodeImageDict>({});
   
     // when given a search, search for it
@@ -54,8 +43,7 @@ const BirdResults = (props: BirdResultsProps) => {
   
     // when new results are available, get a list of all species codes
     useEffect( () => {
-      if(props.searchReady && props.taxonomyLoaded && !(props.taxonomyError instanceof Error))
-      {
+      if(props.searchReady && props.taxonomyLoaded && !(props.taxonomyError instanceof Error)) {
         const newSpeciesCodesInResults:string[] = [];
         results.forEach(logEntry => {
           if (!(newSpeciesCodesInResults.includes(logEntry.speciesCode))) {
@@ -64,6 +52,9 @@ const BirdResults = (props: BirdResultsProps) => {
         });
         // add full species to list if it is included in newly created species code array
         const newSpeciesInResults = props.taxonomy.filter(speciesEntry => newSpeciesCodesInResults.includes(speciesEntry.speciesCode))
+
+        // reset SpeciesFiltered
+        setSpeciesFiltered([]);
 
         setSpeciesInResults(newSpeciesInResults);
       }
@@ -111,19 +102,25 @@ const BirdResults = (props: BirdResultsProps) => {
         })
       }
     }, [speciesInResults, speciesCodeImagesDict])
+
+    const addSpeciesToFilter = (event:React.MouseEvent<HTMLDivElement>, speciesCode: string) => {
+      const newSpeciesFiltered = [...speciesFiltered];
+      if(newSpeciesFiltered.includes(speciesCode)) {
+        const index = newSpeciesFiltered.indexOf(speciesCode);
+        newSpeciesFiltered.splice(index, 1)
+      } else {
+        newSpeciesFiltered.push(speciesCode);
+      }
+      setSpeciesFiltered(newSpeciesFiltered);
+    }
   
     return (
       <Fragment>
-        <div className="speciesDisplay">
-          {speciesInResults.map(speciesInstance => (
-            <div key={speciesInstance.speciesCode} className="polaroid"> <div className={typeof speciesCodeImagesDict[speciesInstance.speciesCode] === "string"?"":"hidden"}> <img src={speciesCodeImagesDict[speciesInstance.speciesCode]}/> </div> <span className="common">{speciesInstance.comName} </span> <span className="scientific"> ({speciesInstance.sciName})</span> </div>
-          ))}
-        </div>
-        <ul>
-          {results.map(result => (
-            <li key={result.subId+result.speciesCode}> {result.comName} ({result.sciName}) - {result.howMany} - {result.locName} - {result.lat}, {result.lng} - {result.obsDt} </li>
-          ))}
-        </ul>
+        {results.length > 0 &&
+        <>
+          <BirdSpeciesInResultsList addSpeciesToFilter={addSpeciesToFilter} speciesFiltered={speciesFiltered} speciesInResults={speciesInResults} speciesCodeImagesDict={speciesCodeImagesDict}></BirdSpeciesInResultsList>
+          <BirdSightingsList speciesFiltered={speciesFiltered} results={results}></BirdSightingsList>
+        </>}
       </Fragment>
     )
   }
