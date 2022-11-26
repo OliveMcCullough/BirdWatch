@@ -1,6 +1,8 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import {getRecentBirdObservations, getPixabay} from './api_functions'
-import { SearchAttributes, Taxonomy } from './interfaces';
+import BirdSightingsList from './bird_sightings_list';
+import { ObservationResult, SearchAttributes, SpeciesCodeImageDict, Taxonomy } from './interfaces';
+import SpeciesList from './species_list';
 
 interface BirdResultsProps {
   taxonomyError: Error | undefined;
@@ -10,24 +12,10 @@ interface BirdResultsProps {
   taxonomy: Taxonomy;
 }
 
-interface ObservationResult {
-  subId: string;
-  speciesCode: string;
-  comName: string;
-  sciName: string;
-  howMany: number;
-  locName: string;
-  lat: number;
-  lng: number;
-  obsDt: string;
-}
-
 interface FoundImageData {
   webformatURL: string;
   tags: string;
 }
-
-type SpeciesCodeImageDict = {[key:string]:string|undefined};
 
 const BirdResults = (props: BirdResultsProps) => {
     const[results, setResults] = useState<ObservationResult[]>([]);
@@ -114,16 +102,11 @@ const BirdResults = (props: BirdResultsProps) => {
   
     return (
       <Fragment>
-        <div className="speciesDisplay">
-          {speciesInResults.map(speciesInstance => (
-            <div key={speciesInstance.speciesCode} className="polaroid"> <div className={typeof speciesCodeImagesDict[speciesInstance.speciesCode] === "string"?"":"hidden"}> <img src={speciesCodeImagesDict[speciesInstance.speciesCode]}/> </div> <span className="common">{speciesInstance.comName} </span> <span className="scientific"> ({speciesInstance.sciName})</span> </div>
-          ))}
-        </div>
-        <ul>
-          {results.map(result => (
-            <li key={result.subId+result.speciesCode}> {result.comName} ({result.sciName}) - {result.howMany} - {result.locName} - {result.lat}, {result.lng} - {result.obsDt} </li>
-          ))}
-        </ul>
+        {results.length > 0 &&
+        <>
+          <SpeciesList speciesInResults={speciesInResults} speciesCodeImagesDict={speciesCodeImagesDict}></SpeciesList>
+          <BirdSightingsList results={results}></BirdSightingsList>
+        </>}
       </Fragment>
     )
   }

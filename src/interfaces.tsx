@@ -18,3 +18,17 @@ export interface SelectedSpecies {
   name: string | undefined;
   code: string | undefined;
 }
+
+export type SpeciesCodeImageDict = {[key:string]:string|undefined};
+
+export interface ObservationResult {
+  subId: string;
+  speciesCode: string;
+  comName: string;
+  sciName: string;
+  howMany: number;
+  locName: string;
+  lat: number;
+  lng: number;
+  obsDt: string;
+}
