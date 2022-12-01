@@ -20,6 +20,7 @@ body {
   font-display: swap;
 }
 .bird_app {
+  position: relative;
   font-family: "Cardenio Modern";
   width: 90%;
   margin: auto;
@@ -135,6 +136,10 @@ body {
 .bird_app .speciesDisplay .speciesDisplayCollapsableContent.opened .polaroid {
   cursor: pointer;
 }
+.bird_app .speciesDisplay .speciesDisplayCollapsableContent.single {
+  box-shadow: none;
+  padding: 20px;
+}
 .bird_app .speciesDisplay .speciesDisplayCollapsableContent .polaroid {
   margin: 20px;
   width: 280px;
@@ -155,6 +160,20 @@ body {
   width: 30px;
   top: -10px;
   background-image: url("./images/Pin.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 5;
+}
+.bird_app .speciesDisplay .speciesDisplayCollapsableContent .polaroid.selected::after {
+  content: "";
+  position: absolute;
+  right: 15px;
+  margin: auto;
+  height: 20px;
+  width: 20px;
+  bottom: 10px;
+  background-image: url("./images/HeartDrawing.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -204,31 +223,53 @@ body {
   padding: 10px 0px 20px 0;
   box-shadow: 1px 1px 7px 2px rgba(44, 44, 44, 0.25);
   font-family: "A little sunshine";
-  min-height: 650px;
+  height: 800px;
+  position: relative;
 }
-.bird_app .sightingsDisplay ul {
+.bird_app .sightingsDisplay .binderRings {
+  position: absolute;
+  height: 60px;
+  margin: 0 1%;
+  background-image: url("./images/BinderRing.png");
+  top: -40px;
+  left: 0;
+  right: 0;
+  background-size: auto 100%;
+  background-position: left;
+  background-repeat: space;
+}
+.bird_app .sightingsDisplay .sightingsContent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.bird_app .sightingsDisplay .sightingsContent .sightingsList {
   padding: 0px 20px;
+  overflow-y: auto;
+  height: 50%;
 }
-.bird_app .sightingsDisplay ul li {
+.bird_app .sightingsDisplay .sightingsContent .sightingsList li {
   list-style: none;
   font-size: 14pt;
   margin: 0 0 20px;
 }
-.bird_app .sightingsDisplay ul li span.common_name {
+.bird_app .sightingsDisplay .sightingsContent .sightingsList li span.common_name {
   font-size: 19pt;
 }
-.bird_app .sightingsDisplay ul li span.scientific_name {
+.bird_app .sightingsDisplay .sightingsContent .sightingsList li span.scientific_name {
   font-size: 16pt;
   color: #777;
 }
-.bird_app .sightingsDisplay .binderRings {
-  height: 60px;
-  margin: 0 1%;
-  background-image: url("./images/BinderRing.png");
-  margin-top: -40px;
-  background-size: auto 100%;
-  background-position: left;
-  background-repeat: space;
+.bird_app .sightingsDisplay .sightingsContent .birdSightingMapDisplay {
+  margin: 0 20px;
+  height: 50%;
+  max-width: 100%;
+}
+.bird_app .sightingsDisplay .sightingsContent .birdSightingMapDisplay .leaflet-container {
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 .bird_app .bird_search_bar {
   z-index: 1;

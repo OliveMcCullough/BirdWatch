@@ -1,8 +1,10 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import {getRecentBirdObservations, getPixabay} from './api_functions'
-import BirdSightingsList from './bird_sightings_list';
+import BirdSightings from './bird_sightings';
 import { ObservationResult, SearchAttributes, SpeciesCodeImageDict, Taxonomy } from './interfaces';
 import BirdSpeciesInResultsList from './bird_species_in_results_list';
+import BirdSightingsMapDisplay from './bird_sightings_map';
+
 
 interface BirdResultsProps {
   taxonomyError: Error | undefined;
@@ -115,13 +117,13 @@ const BirdResults = (props: BirdResultsProps) => {
     }
   
     return (
-      <Fragment>
+      <>
         {results.length > 0 &&
         <>
           <BirdSpeciesInResultsList addSpeciesToFilter={addSpeciesToFilter} speciesFiltered={speciesFiltered} speciesInResults={speciesInResults} speciesCodeImagesDict={speciesCodeImagesDict}></BirdSpeciesInResultsList>
-          <BirdSightingsList speciesFiltered={speciesFiltered} results={results}></BirdSightingsList>
+          <BirdSightings speciesFiltered={speciesFiltered} results={results}></BirdSightings>
         </>}
-      </Fragment>
+      </>
     )
   }
 
