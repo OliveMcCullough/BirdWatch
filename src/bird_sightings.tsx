@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import BirdSightingsMapDisplay from "./bird_sightings_map";
 import { ObservationResult } from "./interfaces";
 
-interface BirdSightingsListProps {
+interface BirdSightingsProps {
     results: ObservationResult[];
     speciesFiltered: string[];
 }
@@ -33,7 +34,7 @@ const formaliseDate = (YearMonthDayHoursMinutes:string) => {
     return `${month} ${day} ${date.getFullYear()} at ${time}`;
 }
 
-const BirdSightingsList = (props: BirdSightingsListProps) => {
+const BirdSightings = (props: BirdSightingsProps) => {
     const [filteredResults, setFilteredResults] = useState<ObservationResult[]>([]);
 
     useEffect(() => {
@@ -48,14 +49,17 @@ const BirdSightingsList = (props: BirdSightingsListProps) => {
     return (
         <div className="sightingsDisplay">
             <div className="binderRings"> </div>
-            <ul>
-              {filteredResults.map(result => (
-                <li key={result.subId+result.speciesCode}> <span className="common_name">{result.comName}</span> <span className="scientific_name">({result.sciName})</span> <br/>
-                {(result.howMany?`${result.howMany}  spotted`:"Spotted")} around {result.locName} ({result.lat.toFixed(3)}, {result.lng.toFixed(3)}) on {formaliseDate(result.obsDt)} </li>
-              ))}
-            </ul>
-          </div>
+            <div className="sightingsContent">
+                <ul className="sightingsList">
+                    {filteredResults.map(result => (
+                    <li key={result.subId+result.speciesCode}> <span className="common_name">{result.comName}</span> <span className="scientific_name">({result.sciName})</span> <br/>
+                    {(result.howMany?`${result.howMany}  spotted`:"Spotted")} around {result.locName} ({result.lat.toFixed(3)}, {result.lng.toFixed(3)}) on {formaliseDate(result.obsDt)} </li>
+                    ))}
+                </ul>
+                <BirdSightingsMapDisplay filteredResults={filteredResults}></BirdSightingsMapDisplay>
+            </div>
+        </div>
     )
 }
 
-export default BirdSightingsList;
+export default BirdSightings;
