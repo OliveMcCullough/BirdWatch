@@ -25,6 +25,11 @@ body {
   width: 90%;
   margin: auto;
 }
+@media screen and (max-width: 600px) {
+  .bird_app {
+    width: 99%;
+  }
+}
 .bird_app h1 {
   color: white;
   font-size: 28pt;
@@ -226,6 +231,11 @@ body {
   height: 800px;
   position: relative;
 }
+@media screen and (max-width: 600px) {
+  .bird_app .sightingsDisplay {
+    width: 99%;
+  }
+}
 .bird_app .sightingsDisplay .binderRings {
   position: absolute;
   height: 60px;
@@ -264,6 +274,11 @@ body {
   margin: 0 20px;
   height: 50%;
   max-width: 100%;
+}
+@media screen and (max-width: 600px) {
+  .bird_app .sightingsDisplay .sightingsContent .birdSightingMapDisplay {
+    margin: 0 1px;
+  }
 }
 .bird_app .sightingsDisplay .sightingsContent .birdSightingMapDisplay .leaflet-container {
   margin: auto;
