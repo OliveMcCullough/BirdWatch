@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { SpeciesCodeImageDict, Taxonomy } from "./interfaces";
 
 
@@ -29,9 +29,26 @@ const BirdSpeciesInResultsList = (props: SpeciesListProps) => {
     }
 
     return (
-        <Fragment>
-            {props.speciesInResults.length > 0 &&
-            <>
+        <>
+            {props.speciesInResults.length === 1 &&
+                <div className="speciesDisplay">
+                    <div className={"speciesDisplayCollapsableContent single"}>
+                        {props.speciesInResults.map(speciesInstance => (
+                            <div 
+                                key={speciesInstance.speciesCode} 
+                                className={`polaroid${(props.speciesFiltered.includes(speciesInstance.speciesCode)?" selected":"")}`}
+                            > 
+                                <div className={typeof props.speciesCodeImagesDict[speciesInstance.speciesCode] === "string"?"":"hidden"}> 
+                                    <img src={props.speciesCodeImagesDict[speciesInstance.speciesCode]}/> 
+                                </div> 
+                                <span className="common_name">{speciesInstance.comName} </span> 
+                                <span className="scientific_name"> ({speciesInstance.sciName})</span> 
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            }
+            {props.speciesInResults.length > 1 &&
                 <div className="speciesDisplay">
                     <h2> Here are some of the species that have been spotted recently </h2>
                     <p> Expand and select which species you want to filter for in the results </p>
@@ -52,8 +69,8 @@ const BirdSpeciesInResultsList = (props: SpeciesListProps) => {
                     </div>
                     <button onClick={(event) => toggleAccordion(event)}>{(accordionOpen?"Collapse":"Expand")}</button>
                 </div>
-            </>}
-        </Fragment>
+            }
+        </>
     )
 }
 
