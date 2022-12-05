@@ -93,7 +93,7 @@ export const getEBirdTaxonomy = async () => {
     return data;
     }
 
-    export const getCountryInfo = async () => {
+export const getCountryInfo = async () => {
     const response = await fetch("https://restcountries.com/v3.1/all");
     if(!response.ok) {
         throw new Error("Bad response");
