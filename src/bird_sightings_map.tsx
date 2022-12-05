@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon, LatLngBoundsExpression } from "leaflet";
 import 'leaflet/dist/leaflet.css';
-import { ObservationResult } from './interfaces';
+import { ObservationResult, Coords } from './interfaces';
 import { useEffect, useState } from 'react';
 
 const icon = new Icon({
@@ -23,11 +23,6 @@ interface IconData {
 interface DatedContent {
     date: Date;
     content: string[];
-}
-
-interface Coords {
-    lattitude: number;
-    longitude: number;
 }
 
 const BirdSightingsMapDisplay = (props:BirdSightingsMapDisplayProps) => {
