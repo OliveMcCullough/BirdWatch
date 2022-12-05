@@ -1,12 +1,14 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { Icon } from "leaflet";
+import { Icon, LatLngBoundsExpression } from "leaflet";
 import 'leaflet/dist/leaflet.css';
-import { ObservationResult } from './interfaces';
+import { ObservationResult, Coords } from './interfaces';
 import { useEffect, useState } from 'react';
 
 const icon = new Icon({
     iconUrl: "BirdMapIcon.png",
-    iconSize: [40, 40]
+    iconSize: [29, 28],
+    iconAnchor: [10, 28],
+    popupAnchor: [0, -22],
 })
 
 interface BirdSightingsMapDisplayProps {
@@ -23,15 +25,10 @@ interface DatedContent {
     content: string[];
 }
 
-interface Coords {
-    lattitude: number;
-    longitude: number;
-}
-
 const BirdSightingsMapDisplay = (props:BirdSightingsMapDisplayProps) => {
 
-    const [iconDataSet, setIconDataSet] = useState<IconData[]>([])
-    const [centerCoords, setCenterCoords] = useState<undefined|Coords>(undefined)
+    const [iconDataSet, setIconDataSet] = useState<IconData[]>([]);
+    const [bounds, setBounds] = useState<LatLngBoundsExpression|undefined>(undefined);
 
     // organise the data so that it can be displayed as the smallest possible amount of icons that exactly cover every set of coordinates birds have been spotted
     // the text content of each icon organised by datetime
@@ -66,6 +63,7 @@ const BirdSightingsMapDisplay = (props:BirdSightingsMapDisplayProps) => {
     }, [props.filteredResults])
 
     // get the most extreme coordinates of the icon data set and deduce the center of the map
+    // also set the coordinates as the bounds of the map
     useEffect(() => {
         if(iconDataSet.length > 0) {
             const lattitudes = iconDataSet.map((iconData) => iconData.coordinates.lattitude);
@@ -74,14 +72,13 @@ const BirdSightingsMapDisplay = (props:BirdSightingsMapDisplayProps) => {
             const minLng = Math.min.apply(null, longitudes);
             const maxLat = Math.max.apply(null, lattitudes)
             const maxLng = Math.max.apply(null, longitudes);
-            const newCenterCoords = {lattitude:(minLat + maxLat)/2, longitude:(minLng + maxLng)/2}
-            setCenterCoords(newCenterCoords);
+            setBounds([[minLat,minLng],[maxLat,maxLng]]);
         }
     },[iconDataSet])
 
     return (
         <div className="birdSightingMapDisplay">
-            {centerCoords && <MapContainer center={[centerCoords.lattitude, centerCoords.longitude]} zoom={10} scrollWheelZoom={true}>
+            {bounds && <MapContainer bounds={bounds} scrollWheelZoom={true}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

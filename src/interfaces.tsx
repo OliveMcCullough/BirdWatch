@@ -32,3 +32,8 @@ export interface ObservationResult {
   lng: number;
   obsDt: string;
 }
+
+export interface Coords {
+  lattitude: number;
+  longitude: number;
+}

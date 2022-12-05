@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from 'react';
 import {getCountryInfo} from './api_functions';
 
 import BirdSpeciesListComponent from './bird_species_list_component';
-import {SearchAttributes, SelectedSpecies, Taxonomy } from './interfaces';
+import {Coords, SearchAttributes, SelectedSpecies, Taxonomy } from './interfaces';
 
 interface BirdSearchBarProps {
   searchReady: Boolean;
@@ -16,6 +16,7 @@ interface BirdSearchBarProps {
 interface CountryData {
   name: string;
   code: string;
+  coordinates: Coords;
 }
 
 type CountryCodeList = CountryData[];
@@ -42,9 +43,18 @@ const BirdSearchBar = (props:BirdSearchBarProps) => {
     // run this once parent says the search is ready
     useEffect( () => {
       if(props.searchReady) {
+        // if we don't have coordinates in the search results, extrapolate a base set of coordinates based on the country instead of using the ones that are available
+        if(typeof props.searchAttributes.lattitude === "undefined" || typeof props.searchAttributes.longitude === "undefined") {
+          const country = countryCodeList.find(country => country.code === props.searchAttributes.areaCode);
+          if (country) {
+            setLocalLattitude(country.coordinates.lattitude);
+            setLocalLongitude(country.coordinates.longitude);
+          }
+        } else {
+          setLocalLattitude(props.searchAttributes.lattitude);
+          setLocalLongitude(props.searchAttributes.longitude);
+        }
         setLocalAreaCode(props.searchAttributes.areaCode);
-        setLocalLattitude(props.searchAttributes.lattitude);
-        setLocalLongitude(props.searchAttributes.longitude);
       }
     }, [props.searchReady, props.searchAttributes.areaCode, props.searchAttributes.lattitude, props.searchAttributes.longitude])
   
@@ -55,7 +65,11 @@ const BirdSearchBar = (props:BirdSearchBarProps) => {
         setCountryListReady(true);
       })
       .then((data) => {
-        const data_filtered = data.map((country:any) => country = {"name":country.name.common, "code":country.cca2} as CountryData);
+        const data_filtered = data.map((country:any) => country = {
+          "name":country.name.common, 
+          "code":country.cca2,
+          "coordinates":{lattitude:(country.capitalInfo.latlng?country.capitalInfo.latlng[0]:country.latlng[0]), longitude:country.capitalInfo.latlng?country.capitalInfo.latlng[1]:country.latlng[1]}
+        } as CountryData);
         const data_filterered_ordered = data_filtered.sort( (a:CountryData, b:CountryData) => {
           return a.name.localeCompare(b.name, "en", {sensitivity: "base"})
         })
