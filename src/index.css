@@ -286,6 +286,10 @@ body {
   height: 100%;
   z-index: 1;
 }
+.bird_app .sightingsDisplay .sightingsContent .birdSightingMapDisplay .leaflet-container .leaflet-popup-content {
+  max-height: 300px;
+  overflow-y: auto;
+}
 .bird_app .bird_search_bar {
   z-index: 1;
   position: relative;
